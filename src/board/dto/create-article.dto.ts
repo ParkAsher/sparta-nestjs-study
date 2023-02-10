@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
 
-export class createArticleDto {
+export class CreateArticleDto {
   @IsString()
   readonly title: string;
 

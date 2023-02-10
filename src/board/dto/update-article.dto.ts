@@ -1,12 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateArticleDto } from './create-article.dto';
 
-export class updateArticleDto {
-  @IsString()
-  readonly title: string;
-
-  @IsString()
-  readonly content: string;
-
-  @IsNumber()
-  readonly password: number;
-}
+export class UpdateArticleDto extends PartialType(CreateArticleDto) {}

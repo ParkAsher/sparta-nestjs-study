@@ -1,6 +1,6 @@
-import { IsNumber } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { CreateArticleDto } from './create-article.dto';
 
-export class DeleteArticleDto {
-  @IsNumber()
-  readonly password: number;
-}
+export class DeleteArticleDto extends PickType(CreateArticleDto, [
+  'password',
+] as const) {}
