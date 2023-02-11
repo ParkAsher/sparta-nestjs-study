@@ -8,5 +8,5 @@ export class CreateArticleDto {
     readonly content: string;
 
     @IsNumber()
-    readonly password: string;
+    readonly password: number;
 }

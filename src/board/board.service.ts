@@ -22,7 +22,7 @@ export class BoardService {
         });
     }
 
-    createArticle(title: string, content: string, password: string) {
+    createArticle(title: string, content: string, password: number) {
         const articleId = this.articles.length + 1;
 
         this.articles.push({
@@ -40,7 +40,7 @@ export class BoardService {
         id: number,
         title: string,
         content: string,
-        password: string,
+        password: number,
     ) {
         // 비밀번호 확인
         if (this.articlePasswords.get(id) !== password) {
@@ -58,7 +58,7 @@ export class BoardService {
         article.content = content;
     }
 
-    deleteArticle(id: number, password: string) {
+    deleteArticle(id: number, password: number) {
         if (this.articlePasswords.get(id) !== password) {
             throw new UnauthorizedException(
                 `Article password is not correct. id: ${id}`,
