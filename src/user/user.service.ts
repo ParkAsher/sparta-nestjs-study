@@ -1,0 +1,62 @@
+import {
+    ConflictException,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
+import _ from 'lodash';
+
+@Injectable()
+export class UserService {
+    constructor(
+        @InjectRepository(User) private userRepository: Repository<User>,
+        private jwtService: JwtService,
+    ) {}
+
+    async login(userId: string, password: string) {
+        const user = await this.userRepository.findOne({
+            where: { userId, deletedAt: null },
+            select: ['id', 'password'],
+        });
+
+        if (_.isNil(user)) {
+            throw new NotFoundException(`User not found. userId: ${userId}`);
+        }
+
+        if (user.password !== password) {
+            throw new UnauthorizedException(
+                `User password is not correct. userId: ${userId}`,
+            );
+        }
+    }
+
+    async createUser(userId: string, name: string, password: string) {
+        const existUser = await this.getUserInfo(userId);
+        if (!_.isNil(existUser)) {
+            throw new ConflictException(
+                `User already exists. userId: ${userId}`,
+            );
+        }
+
+        await this.userRepository.insert({
+            userId,
+            name,
+            password,
+        });
+    }
+
+    async updateUser(userId: string, name: string, password: string) {
+        this.userRepository.update(userId, { name, password });
+    }
+
+    async getUserInfo(userId: string) {
+        return await this.userRepository.findOne({
+            where: { userId, deletedAt: null },
+            select: ['name'],
+        });
+    }
+}

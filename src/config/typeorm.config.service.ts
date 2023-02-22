@@ -21,4 +21,4 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             synchronize: true, // 배포 환경에서는 false로 설정해야한다.
         };
     }
-}
+} 
