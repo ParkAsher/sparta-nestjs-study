@@ -32,6 +32,11 @@ export class UserService {
                 `User password is not correct. userId: ${userId}`,
             );
         }
+
+        const payload = { id: user.id };
+        const accessToken = await this.jwtService.signAsync(payload);
+
+        return accessToken;
     }
 
     async createUser(userId: string, name: string, password: string) {
@@ -42,11 +47,16 @@ export class UserService {
             );
         }
 
-        await this.userRepository.insert({
+        const insertResult = await this.userRepository.insert({
             userId,
             name,
             password,
         });
+
+        const payload = { id: insertResult.identifiers[0].id };
+        const accessToken = await this.jwtService.signAsync(payload);
+
+        return accessToken;
     }
 
     async updateUser(userId: string, name: string, password: string) {
