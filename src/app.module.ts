@@ -3,6 +3,7 @@ import {
     Module,
     NestModule,
     RequestMethod,
+    CacheModule,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config/dist';
@@ -28,6 +29,11 @@ import { UserModule } from './user/user.module';
             imports: [ConfigModule],
             useClass: JwtConfigService,
             inject: [ConfigService],
+        }),
+        CacheModule.register({
+            ttl: 60000,
+            max: 100,
+            isGlobal: true,
         }),
         BoardModule,
         UserModule,

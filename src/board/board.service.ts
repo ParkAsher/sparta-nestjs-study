@@ -1,23 +1,34 @@
 import {
+    CACHE_MANAGER,
+    Inject,
     Injectable,
     NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Cache } from 'cache-manager';
 import _ from 'lodash';
-import { Article } from 'src/board/article.entity';
-import { Repository } from 'typeorm';
 import { ArticleRepository } from './article.repository';
 
 @Injectable()
 export class BoardService {
-    constructor(private articleRepository: ArticleRepository) {}
+    constructor(
+        @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+        private articleRepository: ArticleRepository,
+    ) {}
 
     async getArticles() {
-        return await this.articleRepository.find({
+        const cachedArticles = await this.cacheManager.get('articles');
+        if (!_.isNil(cachedArticles)) {
+            return cachedArticles;
+        }
+
+        const articles = await this.articleRepository.find({
             where: { deletedAt: null },
             select: ['id', 'author', 'title', 'content', 'createdAt'],
         });
+
+        await this.cacheManager.set('articles', articles);
+        return articles;
     }
 
     async getArticleById(id: number) {
