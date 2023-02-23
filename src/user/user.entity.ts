@@ -8,13 +8,13 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ schema: 'board', name: 'articles' })
+@Entity({ schema: 'board', name: 'users' })
 export class User {
     @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
     id: number;
 
     @Index({ unique: true })
-    @Column()
+    @Column('varchar')
     userId: string;
 
     @Column('varchar', { length: 10 })

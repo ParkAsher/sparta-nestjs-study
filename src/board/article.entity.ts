@@ -21,7 +21,7 @@ export class Article {
     @Column('varchar', { length: 1000 })
     content: string;
 
-    @Column('varchar', { select: false })
+    @Column('varchar', { length: 10, select: false })
     password: string;
 
     @CreateDateColumn()
