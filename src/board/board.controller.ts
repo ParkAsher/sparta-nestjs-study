@@ -29,6 +29,11 @@ export class BoardController {
         return await this.boardService.getArticleById(articleId);
     }
 
+    @Get('/hot-ardicles')
+    async getHotArticles() {
+        return await this.boardService.getHotArticles();
+    }
+
     // 게시물 작성
     @Post('/articles')
     async createArticle(@Body() data: CreateArticleDto) {

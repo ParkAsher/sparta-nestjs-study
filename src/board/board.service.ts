@@ -7,13 +7,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import _ from 'lodash';
 import { Article } from 'src/board/article.entity';
 import { Repository } from 'typeorm';
+import { ArticleRepository } from './article.repository';
 
 @Injectable()
 export class BoardService {
-    constructor(
-        @InjectRepository(Article)
-        private articleRepository: Repository<Article>,
-    ) {}
+    constructor(private articleRepository: ArticleRepository) {}
 
     async getArticles() {
         return await this.articleRepository.find({
@@ -34,6 +32,10 @@ export class BoardService {
                 'updatedAt',
             ],
         });
+    }
+
+    async getHotArticles() {
+        return await this.articleRepository.getArticlesByViewCount();
     }
 
     async createArticle(title: string, content: string, password: number) {
